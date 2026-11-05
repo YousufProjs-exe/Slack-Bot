@@ -1,5 +1,18 @@
 /*
-  existing bot + 
+  help 
+  password 
+  ping 
+  time - whatsup
+  date - whatsup 
+  whatsup 
+  hello 
+  neofetch 
+  fastfetch 
+  coinflip 
+  dice 
+  whoami 
+  remind 
+  quote
   calculator 
   better pool 
   my personal messaging bot
@@ -24,19 +37,26 @@ app.command("/ysh-help", async ({ ack, respond }) => {
     text:
       "*YSH — Yousuf Shell*\n\n" +
       "`/ysh-help` - Show commands\n" +
-      "`/ysh-password` - generate a password\n" 
+      "`/ysh-password` - generate a password\n" +
+      "`/ysh-ping` - ping the bot"
   });
 });
 
 app.command("/ysh-password", async ({ ack, respond }) => {
   await ack();
-
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789!@#$^%&*";
   const bytes = require("crypto").randomBytes(16);
   const password = Array.from(bytes, b => chars[b % chars.length]).join("");
-
   await respond({
     response_type: "ephemeral",
     text: `Generated password: \`${password}\``,
+  });
+});
+
+app.command("/ysh-ping", async ({ ack, respond }) => {
+  await ack();
+  await respond({
+    response_type: "ephemeral",
+    text: "Pong!",
   });
 });
