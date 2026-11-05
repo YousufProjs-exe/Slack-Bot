@@ -2,14 +2,14 @@
   help 
   password 
   ping 
+  coinflip 
+  dice 
   time - whatsup
   date - whatsup 
   whatsup 
   hello 
   neofetch 
   fastfetch 
-  coinflip 
-  dice 
   whoami 
   remind 
   quote
@@ -38,6 +38,7 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "*YSH — Yousuf Shell*\n\n" +
       "`/ysh-help` - Show commands\n" +
       "`/ysh-coinflip` - File a Coin to decide !\n" +
+      "`/ysh-dice` - Rolllly rolllyyy dice ! \n" +
       "`/ysh-password` - generate a password\n" +
       "`/ysh-ping` - ping the bot"
   });
