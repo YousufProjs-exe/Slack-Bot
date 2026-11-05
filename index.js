@@ -4,10 +4,10 @@
   ping 
   coinflip 
   dice 
+  hello 
   time - whatsup
   date - whatsup 
   whatsup 
-  hello 
   neofetch 
   fastfetch 
   whoami 
@@ -85,6 +85,15 @@ app.command("/ysh-hello", async ({ ack, respond }) => {
   await respond({
     response_type: "ephemeral",
     text: `Yo! ${command.user_name}, welcome!`
+  })
+})
+
+app.command("/ysh-time", async ({ ack, respond }) => {
+  await ack();
+  const now = new Date();
+  await respond({
+    response_type: "ephemeral",
+    text: `The current time is: ${now.toLocaleTimeString()}`
   })
 })
 
