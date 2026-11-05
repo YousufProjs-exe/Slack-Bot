@@ -58,9 +58,9 @@ app.command("/ysh-ping", async ({ ack, respond }) => {
   await ack();
   await respond({
     response_type: "ephemeral",
-    text: "Pong!",
+    text: "if you can see this, means the bot is working!",
   })
-});
+})
 
 app.command("/ysh-coinflip", async ({ ack, respond }) => {
   await ack();
@@ -77,11 +77,11 @@ app.command("/ysh-dice", async ({ ack, respond }) => {
   await respond({
     response_type: "in_channel",
     text: `${command.user_name} rolled a ${result}!`,
-  });
+  })
 })
 
 (async () => {
   await app.start();
   console.log("yah bro im running");
   // Terminaloic Hope ! 
-})();
+})()
