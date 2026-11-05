@@ -80,6 +80,14 @@ app.command("/ysh-dice", async ({ ack, respond }) => {
   })
 })
 
+app.command("/ysh-hello", async ({ ack, respond }) => {
+  await ack();
+  await respond({
+    response_type: "ephemeral",
+    text: `Yo! ${command.user_name}, welcome!`
+  })
+})
+
 (async () => {
   await app.start();
   console.log("yah bro im running");
