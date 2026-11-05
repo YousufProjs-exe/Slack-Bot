@@ -39,7 +39,9 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "`/ysh-coinflip` - File a Coin to decide !\n" +
       "`/ysh-dice` - Rolllly rolllyyy dice ! \n" +
       "`/ysh-password` - generate a password\n" +
-      "`/ysh-ping` - ping the bot"
+      "`/ysh-ping` - ping the bot\n" +
+      "`/ysh-hello` - say hello to the bot\n" +
+      "`/ysh-time` - get the current time\n"
   });
 })
 
