@@ -6,7 +6,6 @@
   DM reminders 
 */
 
-
 require("dotenv").config();
 
 const { App } = require("@slack/bolt");
@@ -32,7 +31,7 @@ app.command("/ysh-help", async ({ ack, respond }) => {
 app.command("/ysh-password", async ({ ack, respond }) => {
   await ack();
 
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*";
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789!@#$^%&*";
   const bytes = require("crypto").randomBytes(16);
   const password = Array.from(bytes, b => chars[b % chars.length]).join("");
 
