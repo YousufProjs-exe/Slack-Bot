@@ -31,7 +31,6 @@ const app = new App({
 
 app.command("/ysh-help", async ({ ack, respond }) => {
   await ack();
-
   await respond({
     response_type: "ephemeral",
     text:
@@ -42,7 +41,7 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "`/ysh-password` - generate a password\n" +
       "`/ysh-ping` - ping the bot"
   });
-});
+})
 
 app.command("/ysh-password", async ({ ack, respond }) => {
   await ack();
@@ -52,7 +51,7 @@ app.command("/ysh-password", async ({ ack, respond }) => {
   await respond({
     response_type: "ephemeral",
     text: `Generated password: \`${password}\``,
-  });
+  })
 });
 
 app.command("/ysh-ping", async ({ ack, respond }) => {
@@ -60,17 +59,26 @@ app.command("/ysh-ping", async ({ ack, respond }) => {
   await respond({
     response_type: "ephemeral",
     text: "Pong!",
-  });
+  })
 });
 
 app.command("/ysh-coinflip", async ({ ack, respond }) => {
   await ack();
   const result = Math.random() < 0.5 ? "Heads" : "Tails";
   await respond({
-    response_type: "ephemeral",
+    response_type: "in_channel",
     text: `Coin flip result: ${result}`,
+  })
+})
+
+app.command("/ysh-dice", async ({ ack, respond }) => {
+  await ack();
+  const result = Math.floor(Math.random() * 6) + 1;
+  await respond({
+    response_type: "in_channel",
+    text: `${command.user_name} rolled a ${result}!`,
   });
-});
+})
 
 (async () => {
   await app.start();
