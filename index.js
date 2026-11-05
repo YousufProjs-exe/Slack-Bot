@@ -37,6 +37,7 @@ app.command("/ysh-help", async ({ ack, respond }) => {
     text:
       "*YSH — Yousuf Shell*\n\n" +
       "`/ysh-help` - Show commands\n" +
+      "`/ysh-coinflip` - File a Coin to decide !\n" +
       "`/ysh-password` - generate a password\n" +
       "`/ysh-ping` - ping the bot"
   });
@@ -60,3 +61,18 @@ app.command("/ysh-ping", async ({ ack, respond }) => {
     text: "Pong!",
   });
 });
+
+app.command("/ysh-coinflip", async ({ ack, respond }) => {
+  await ack();
+  const result = Math.random() < 0.5 ? "Heads" : "Tails";
+  await respond({
+    response_type: "ephemeral",
+    text: `Coin flip result: ${result}`,
+  });
+});
+
+(async () => {
+  await app.start();
+  console.log("yah bro im running");
+  // Terminaloic Hope ! 
+})();
