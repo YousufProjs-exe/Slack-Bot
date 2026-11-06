@@ -13,7 +13,7 @@
   quote 
   whoami 
   calculator 
-  remind 
+  reminders 
   better pool 
   my personal messaging bot 
   DM reminders personal - ephemeral and bot dm 
@@ -47,7 +47,9 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "`/ysh-neofetch` - Linux huh? YSH\n" + 
       "`/ysh-fastfetch` - another Linux huh? Slack\n" + 
       "`/ysh-quote` - get a random quote\n" + 
-      "`/ysh-whoami` - know who you are on Slack as\n" 
+      "`/ysh-whoami` - know who you are on Slack as\n" + 
+      "`/ysh-calculator` - calculate a mathematical expression\n" +
+      "`/ysh-remind` - set a reminder for yourself\n" 
   })
 })
 
@@ -233,6 +235,54 @@ app.command("/ysh-calculator", async ({ ack, respond, command }) => {
       text: "Invalid expression!? ",
     });
   }
+})
+
+app.command("/ysh-remind", async ({ ack, respond, command }) => {
+  await ack();
+  const match = command.text.match(/^(\d+)(s|m|h)\s+(.+)$/i);
+
+  if (!match) {
+    return await respond({
+      response_type: "ephemeral",
+      text: "Usage: `/ysh-remind 10m Finish my assignment`",
+    });
+  }
+
+  const amount = Number(match[1]);
+  const unit = match[2].toLowerCase();
+  const message = match[3]
+
+  const multipliers = { s: 1000, m: 60000, h: 3600000};
+
+  const delay = amount * multipliers[unit];
+
+  if (amount <= 0 || delay > 2147483647) {
+    return await respond({
+      response_type: "ephemeral",
+      text: "Invalid reminder duration.",
+    })
+  }
+
+  await respond({
+    response_type: "ephemeral",
+    text: `Reminder set! I'll DM you in ${amount}${unit}.`,
+  })
+
+  setTimeout(async () => {
+    try {
+      const dm = await app.client.conversations.open({
+        users: command.user_id,
+      });
+
+      await app.client.chat.postMessage({
+        channel: dm.channel.id,
+        text: `:alarm_clock: *Reminder!*\n${message}`,
+      })
+
+    } catch (error) {
+      console.error("Reminder failed:", error);
+    }
+  }, delay);
 })
 
 (async () => {
