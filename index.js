@@ -37,11 +37,12 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "`/ysh-help` - Show commands\n" +
       "`/ysh-coinflip` - File a Coin to decide !\n" +
       "`/ysh-dice` - Rolllly rolllyyy dice ! \n" +
+      "`/ysh-whatsup` - get the current date and time\n" +
       "`/ysh-password` - generate a password\n" +
       "`/ysh-ping` - ping the bot\n" +
       "`/ysh-hello` - say hello to the bot\n" +
       "`/ysh-time` - get the current time\n" + 
-      "`/ysh-date` - get the current date\n"
+      "`/ysh-date` - get the current date\n" 
   })
 })
 
@@ -54,7 +55,7 @@ app.command("/ysh-password", async ({ ack, respond }) => {
     response_type: "ephemeral",
     text: `Generated password: \`${password}\``,
   })
-});
+})
 
 app.command("/ysh-ping", async ({ ack, respond }) => {
   await ack();
@@ -105,6 +106,14 @@ app.command("/ysh-date", async ({ ack, respond }) => {
   await respond({
     response_type: "ephemeral",
     text: `The current date is: ${now.toLocaleDateString()}`
+  })
+})
+
+app.command("/ysh-whatsup", async ({ ack, respond }) => {
+  await ack();
+  await respond({
+    response_type: "ephemeral",
+    text: `The date is: ${new Date().toLocaleDateString()} and the time is: ${new Date().toLocaleTimeString()}`
   })
 })
 
