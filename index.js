@@ -114,7 +114,7 @@ app.command("/ysh-date", async ({ ack, respond }) => {
   })
 })
 
-app.command("/ysh-whatsup", async ({ ack, respond }) => {
+app.command("/ysh-whatsup", async ({ ack, respond, command }) => {
   await ack();
   await respond({
     response_type: "ephemeral",
