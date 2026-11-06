@@ -10,9 +10,9 @@
   whatsup 
   neofetch 
   fastfetch 
+  quote
   whoami 
   remind 
-  quote
   calculator 
   better pool 
   my personal messaging bot
@@ -44,7 +44,8 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "`/ysh-time` - get the current time\n" + 
       "`/ysh-date` - get the current date\n" + 
       "`/ysh-neofetch` - Linux huh?\n" + 
-      "`/ysh-fastfetch` - another Linux huh?\n" 
+      "`/ysh-fastfetch` - another Linux huh?\n" + 
+      "`/ysh-quote` - get a random quote\n" 
   })
 })
 
@@ -100,7 +101,7 @@ app.command("/ysh-time", async ({ ack, respond }) => {
     response_type: "ephemeral",
     text: `The current time is: ${now.toLocaleTimeString()}`
   })
-})
+});
 
 app.command("/ysh-date", async ({ ack, respond }) => {
   await ack()
@@ -133,7 +134,7 @@ app.command("/ysh-neofetch", async ({ ack, respond }) => {
   "   | |   \\___ \\ |  _  |\n" +
   "   | |   ____) || | | |\n" +
   "   |_|  |_____/ |_| |_|\n\n" +
-  " YSH — Yousuf Shell\n" +
+  " YSH - Yousuf Shell\n" +
   " Slack Edition\n" +
   " Runtime: Node.js\n" +
   " Framework: Slack Bolt\n" +
@@ -156,12 +157,39 @@ app.command("/ysh-neofetch", async ({ ack, respond }) => {
   "   | |   \\___ \\ |  _  |\n" +
   "   | |   ____) || | | |\n" +
   "   |_|  |_____/ |_| |_|\n\n" +
-  " YSH — Yousuf Shell\n" +
+  " YSH - Yousuf Shell\n" +
   " Slack Edition\n" +
   " Runtime: Node.js\n" +
   " Framework: Slack Bolt\n" +
   " Mode: Socket Mode\n" +
   "```",
+  });
+})
+
+// Quotes ! now my my philosophy works 
+app.command("/ysh-quote", async ({ ack, respond }) => {
+  await ack();
+
+  // got some of this from Google  
+  const quotes = [
+    "Make it work, make it right, make it fast. - Kent Beck",
+    "Great things are done by a series of small things brought together. - Vincent van Gogh",
+    "First, solve the problem. Then, write the code. - John Johnson",
+    "It always seems impossible until it's done. - Nelson Mandela",
+    "Simplicity is the soul of efficiency. - Austin Freeman",
+    "Stay hungry, stay foolish. - Steve Jobs",
+    "The secret of getting ahead is getting started. - Mark Twain",
+    "Talk is cheap. Show me the code. - Linus Torvalds",
+    "Any sufficiently advanced technology is indistinguishable from magic. - Arthur C. Clarke",
+    "Code is like humor. When you have to explain it, it's bad. - Cory House",
+    "Only Limit is your Imagination. - Steve ig",
+    "Theres no pleasure when you are makin a dream come true. - Neymar Jr"
+  ];
+
+  const quote = quotes[Math.floor(Math.random() * quotes.length)];
+  await respond({
+    response_type: "in_channel",
+    text: `*Quote of the moment*\n>${quote}`,
   });
 })
 
