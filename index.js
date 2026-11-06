@@ -43,8 +43,8 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "`/ysh-hello` - say hello to the bot\n" +
       "`/ysh-time` - get the current time\n" + 
       "`/ysh-date` - get the current date\n" + 
-      "`/ysh-neofetch` - Linux huh?\n" + 
-      "`/ysh-fastfetch` - another Linux huh?\n" + 
+      "`/ysh-neofetch` - Linux huh? YSH\n" + 
+      "`/ysh-fastfetch` - another Linux huh? Slack\n" + 
       "`/ysh-quote` - get a random quote\n" + 
       "`/ysh-whoami` - know who you are on Slack as\n" 
   })
@@ -145,20 +145,21 @@ app.command("/ysh-neofetch", async ({ ack, respond }) => {
   })
 })
 
-// another cool touch 
-app.command("/ysh-neofetch", async ({ ack, respond }) => {
+// another cool touch - source is PS with Slack CLI ! 
+app.command("/ysh-fastfetch", async ({ ack, respond }) => {
   await ack();
 
   await respond({
     response_type: "ephemeral",
     text:
   "```\n" +
-  " __   __  _____  _   _ \n" +    // this may seems to be AI generated
-  " \\ \\ / / / ____|| | | |\n" +  //  but only i now how irrittating it was 
-  "  \\ V / | (___  | |_| |\n" +   // to make this masterpiece.
-  "   | |   \\___ \\ |  _  |\n" +
-  "   | |   ____) || | | |\n" +
-  "   |_|  |_____/ |_| |_|\n\n" +
+  "  ____   _         _        ____   _  __     ____  _       ___ \n" +
+  " / ___| | |       / \\      / ___| | |/ /    / ___|| |     |_ _|\n" +
+  " \\___ \\ | |      / _ \\    | |     | ' /    | |    | |      | | \n" +
+  "  ___) || |___  / ___ \\   | |___  | . \\    | |___ | |___   | | \n" +
+  "\n" +
+  " |____/ |_____|/_/   \\_\\   \\____| |_|\\_\\    \\____||_____| |___|\n" +
+  "\n" +
   " YSH - Yousuf Shell\n" +
   " Slack Edition\n" +
   " Runtime: Node.js\n" +
