@@ -203,23 +203,6 @@ app.command("/ysh-whoami", async ({ ack, respond }) => {
   })
 })
 
-app.command("/ysh-calculator", async ({ ack, respond, command }) => {
-  await ack();
-  const expression = command.text;
-  try {
-    const result = eval(expression);
-    await respond({
-      response_type: "ephemeral",
-      text: `Result: ${result}`,
-    });
-  } catch (error) {
-    await respond({
-      response_type: "ephemeral",
-      text: `Error: Invalid expression`,
-    });
-  }
-});
-
 (async () => {
   await app.start();
   console.log("yah bro im running");
