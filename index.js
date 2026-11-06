@@ -42,7 +42,9 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "`/ysh-ping` - ping the bot\n" +
       "`/ysh-hello` - say hello to the bot\n" +
       "`/ysh-time` - get the current time\n" + 
-      "`/ysh-date` - get the current date\n" 
+      "`/ysh-date` - get the current date\n" + 
+      "`/ysh-neofetch` - Linux huh?\n" + 
+      "`/ysh-fastfetch` - another Linux huh?\n" 
   })
 })
 
@@ -115,6 +117,52 @@ app.command("/ysh-whatsup", async ({ ack, respond }) => {
     response_type: "ephemeral",
     text: `The date is: ${new Date().toLocaleDateString()} and the time is: ${new Date().toLocaleTimeString()}`
   })
+});
+
+// cool touch ! 
+app.command("/ysh-neofetch", async ({ ack, respond }) => {
+  await ack()
+
+  await respond({
+    response_type: "ephemeral",
+    text:
+  "```\n" +
+  " __   __  _____  _   _ \n" +    // this may seems to be AI generated
+  " \\ \\ / / / ____|| | | |\n" +  //  but only i now how irrittating it was 
+  "  \\ V / | (___  | |_| |\n" +   // to make this masterpiece.
+  "   | |   \\___ \\ |  _  |\n" +
+  "   | |   ____) || | | |\n" +
+  "   |_|  |_____/ |_| |_|\n\n" +
+  " YSH — Yousuf Shell\n" +
+  " Slack Edition\n" +
+  " Runtime: Node.js\n" +
+  " Framework: Slack Bolt\n" +
+  " Mode: Socket Mode\n" +
+  "```",
+  })
+})
+
+// another cool touch 
+app.command("/ysh-neofetch", async ({ ack, respond }) => {
+  await ack();
+
+  await respond({
+    response_type: "ephemeral",
+    text:
+  "```\n" +
+  " __   __  _____  _   _ \n" +    // this may seems to be AI generated
+  " \\ \\ / / / ____|| | | |\n" +  //  but only i now how irrittating it was 
+  "  \\ V / | (___  | |_| |\n" +   // to make this masterpiece.
+  "   | |   \\___ \\ |  _  |\n" +
+  "   | |   ____) || | | |\n" +
+  "   |_|  |_____/ |_| |_|\n\n" +
+  " YSH — Yousuf Shell\n" +
+  " Slack Edition\n" +
+  " Runtime: Node.js\n" +
+  " Framework: Slack Bolt\n" +
+  " Mode: Socket Mode\n" +
+  "```",
+  });
 })
 
 (async () => {
