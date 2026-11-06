@@ -62,6 +62,7 @@ app.command("/ysh-password", async ({ ack, respond }) => {
   })
 })
 
+// ppl expect pong smtimes 
 app.command("/ysh-ping", async ({ ack, respond }) => {
   await ack();
   await respond({
@@ -207,20 +208,32 @@ app.command("/ysh-whoami", async ({ ack, respond, command }) => {
 
 app.command("/ysh-calculator", async ({ ack, respond, command }) => {
   await ack();
-  const expression = command.text;
+
   try {
-    const result = eval(expression);
+    const parser = new Parser();
+    const expression = command.text.trim();
+
+    if (!expression) {
+      return await respond({
+        response_type: "ephemeral",
+        text: "Usage: `/ysh-calculator 25 * (10 + 5)`",
+      });
+    }
+
+    const result = parser.evaluate(expression);
+
     await respond({
       response_type: "ephemeral",
       text: `Result: ${result}`,
-    });
+    })
+
   } catch (error) {
     await respond({
       response_type: "ephemeral",
-      text: `Error: Invalid expression`,
+      text: "Invalid expression!? ",
     });
   }
-});
+})
 
 (async () => {
   await app.start();
