@@ -5,18 +5,18 @@
   coinflip 
   dice 
   hello 
-  time - whatsup
+  time - whatsup 
   date - whatsup 
   whatsup 
   neofetch 
   fastfetch 
-  quote
+  quote 
   whoami 
   remind 
   calculator 
   better pool 
-  my personal messaging bot
-  DM reminders 
+  my personal messaging bot 
+  DM reminders personal - ephemeral and bot dm 
 */
 
 require("dotenv").config();
