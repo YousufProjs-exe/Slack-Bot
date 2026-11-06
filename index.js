@@ -12,8 +12,8 @@
   fastfetch 
   quote 
   whoami 
-  remind 
   calculator 
+  remind 
   better pool 
   my personal messaging bot 
   DM reminders personal - ephemeral and bot dm 
@@ -45,7 +45,8 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "`/ysh-date` - get the current date\n" + 
       "`/ysh-neofetch` - Linux huh?\n" + 
       "`/ysh-fastfetch` - another Linux huh?\n" + 
-      "`/ysh-quote` - get a random quote\n" 
+      "`/ysh-quote` - get a random quote\n" + 
+      "`/ysh-whoami` - know who you are on Slack as\n" 
   })
 })
 
@@ -77,14 +78,15 @@ app.command("/ysh-coinflip", async ({ ack, respond }) => {
   })
 })
 
-app.command("/ysh-dice", async ({ ack, respond }) => {
+app.command("/ysh-dice", async ({ ack, respond, command }) => {
   await ack();
   const result = Math.floor(Math.random() * 6) + 1;
+
   await respond({
     response_type: "in_channel",
     text: `${command.user_name} rolled a ${result}!`,
   })
-})
+});
 
 app.command("/ysh-hello", async ({ ack, respond }) => {
   await ack();
@@ -200,6 +202,23 @@ app.command("/ysh-whoami", async ({ ack, respond }) => {
     text: `Youre Slack Name <@${command.user_name}> & \nYour Slack ID: ${command.user_id}`
   })
 })
+
+app.command("/ysh-calculator", async ({ ack, respond, command }) => {
+  await ack();
+  const expression = command.text;
+  try {
+    const result = eval(expression);
+    await respond({
+      response_type: "ephemeral",
+      text: `Result: ${result}`,
+    });
+  } catch (error) {
+    await respond({
+      response_type: "ephemeral",
+      text: `Error: Invalid expression`,
+    });
+  }
+});
 
 (async () => {
   await app.start();
