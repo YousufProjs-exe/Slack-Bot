@@ -193,6 +193,14 @@ app.command("/ysh-quote", async ({ ack, respond }) => {
   });
 })
 
+app.command("/ysh-whoami", async ({ ack, respond }) => {
+  await ack()
+  await respond({
+    response_type: "ephemeral",
+    text: `Youre Slack Name <@${command.user_name}> & \nYour Slack ID: ${command.user_id}`
+  })
+})
+
 (async () => {
   await app.start();
   console.log("yah bro im running");
