@@ -88,7 +88,7 @@ app.command("/ysh-dice", async ({ ack, respond, command }) => {
   })
 });
 
-app.command("/ysh-hello", async ({ ack, respond }) => {
+app.command("/ysh-hello", async ({ ack, respond, command }) => {
   await ack();
   await respond({
     response_type: "ephemeral",
