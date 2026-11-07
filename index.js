@@ -22,6 +22,7 @@
 require("dotenv").config();
 const { App } = require("@slack/bolt")
 const { Parser } = require("expr-eval");
+const { createPoll, polls } = require("./poll");
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -284,6 +285,41 @@ app.command("/ysh-remind", async ({ ack, respond, command }) => {
     }
   }, delay);
 })
+
+app.command("/ysh-poll", async ({ ack, respond, command }) => {
+  await ack();
+
+  const parts = command.text.split("|").map(part => part.trim());
+
+  const question = parts.shift();
+  const options = parts;
+
+  if (!question || options.length < 2 || options.length > 5) {
+    return await respond({
+      response_type: "ephemeral",
+      text:
+        "Usage:\n" +
+        "`/ysh-poll Best programming language? | Java | C | Python`\n\n" +
+        "Provide between 2 and 5 options.",
+    });
+  }
+
+  if (options.some(option => !option)) {
+    return await respond({
+      response_type: "ephemeral",
+      text: "Poll options cannot be empty.",
+    });
+  }
+
+  const poll = createPoll(command.user_id, question, options);
+
+  await respond({
+    response_type: "in_channel",
+    text: `Poll created: *${poll.question}*\n\n${poll.options
+      .map(option => `• ${option.name}`)
+      .join("\n")}`,
+  });
+});
 
 (async () => {
   await app.start();
