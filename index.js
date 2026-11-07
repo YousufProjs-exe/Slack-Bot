@@ -50,7 +50,8 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "`/ysh-quote` - get a random quote\n" + 
       "`/ysh-whoami` - know who you are on Slack as\n" + 
       "`/ysh-calculator` - calculate a mathematical expression\n" +
-      "`/ysh-remind` - set a reminder for yourself\n" 
+      "`/ysh-remind` - set a reminder for yourself\n" + 
+      "`/ysh-poll` - create a poll with up to 5 options\n" 
   })
 })
 
