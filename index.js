@@ -51,7 +51,9 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "`/ysh-whoami` - know who you are on Slack as\n" + 
       "`/ysh-calculator` - calculate a mathematical expression\n" +
       "`/ysh-remind` - set a reminder for yourself\n" + 
-      "`/ysh-poll` - create a poll with up to 5 options\n" 
+      "`/ysh-poll` - create a poll with up to 5 options\n" + 
+      "`/ysh-poll-close` - close a poll and show results\n" +
+      "\n*Note:* All commands are case-insensitive and NO COMMAND BLOCK them (they are slash command so type it).",
   })
 })
 
