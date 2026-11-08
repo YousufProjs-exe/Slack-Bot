@@ -2,7 +2,6 @@ const polls = new Map();
 
 function createPoll(userId, question, options) {
   const pollId = Date.now().toString();
-
   const poll = {
     id: pollId,
     creator: userId,
@@ -16,7 +15,6 @@ function createPoll(userId, question, options) {
   };
 
   polls.set(pollId, poll);
-
   return poll;
 }
 
@@ -56,23 +54,17 @@ function createPollBlocks(poll) {
 function castVote(pollId, optionId, userId) {
   const poll = polls.get(pollId);
 
-  if (!poll || poll.closed) {
+  if (!poll || poll.closed) 
     return { success: false, message: "This poll is unavailable or closed." };
-  }
 
   const option = poll.options.find(option => option.id === optionId);
 
-  if (!option) {
+  if (!option) 
     return { success: false, message: "Invalid poll option." };
-  }
 
-  const alreadyVoted = poll.options.some(option =>
-    option.votes.includes(userId)
-  );
-
-  if (alreadyVoted) {
+  const alreadyVoted = poll.options.some(option => option.votes.includes(userId));
+  if (alreadyVoted) 
     return { success: false, message: "You've already voted!" };
-  }
 
   option.votes.push(userId);
   return { success: true, poll };
@@ -80,11 +72,25 @@ function castVote(pollId, optionId, userId) {
 
 function setPollMessage(pollId, channelId, messageTs) {
   const poll = polls.get(pollId);
-
   if (!poll) return;
-
   poll.channelId = channelId;
   poll.messageTs = messageTs;
+}
+
+function closePoll(pollId, userId) {
+  const poll = polls.get(pollId);
+
+  if (!poll) 
+    return { success: false, message: "Poll not found." };
+  
+  if (poll.creator !== userId) 
+    return { success: false, message: "Only the poll creator can close it." };
+  
+  if (poll.closed) 
+    return { success: false, message: "This poll is already closed." };
+  
+  poll.closed = true;
+  return { success: true, poll };
 }
 
 module.exports = {
@@ -93,4 +99,5 @@ module.exports = {
   createPollBlocks,
   castVote,
   setPollMessage,
+  closePoll,
 };
