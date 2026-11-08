@@ -22,7 +22,7 @@
 require("dotenv").config();
 const { App } = require("@slack/bolt")
 const { Parser } = require("expr-eval");
-const { createPoll, polls, createPollBlocks, castVote } = require("./poll");
+const { createPoll, polls, createPollBlocks, castVote, setPollMessage } = require("./poll");
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -292,9 +292,8 @@ app.command("/ysh-poll", async ({ ack, respond, command }) => {
 
   if (!question || options.length < 2 || options.length > 5) {
     return await respond({
-      response_type: "in_channel",
-      text: `Poll: ${poll.question}`,
-      blocks: createPollBlocks(poll),
+      response_type: "ephemeral",
+      text: "Usage: `/ysh-poll Question? | Option 1 | Option 2`\nProvide 2–5 options.",
     });
   }
 
@@ -306,26 +305,35 @@ app.command("/ysh-poll", async ({ ack, respond, command }) => {
   }
 
   const poll = createPoll(command.user_id, question, options);
-  await respond({
-    response_type: "in_channel",
-    text: `Poll created: *${poll.question}*\n\n${poll.options
-      .map(option => `• ${option.name}`)
-      .join("\n")}`,
+  const message = await app.client.chat.postMessage({
+    channel: command.channel_id,
+    text: `Poll: ${poll.question}`,
+    blocks: createPollBlocks(poll),
   });
+
+  setPollMessage(poll.id, message.channel, message.ts);
 });
 
 app.action("ysh_poll_vote", async ({ ack, body, respond }) => {
   await ack();
+
   const [pollId, optionId] = body.actions[0].value.split(":");
+
   const result = castVote(pollId, optionId, body.user.id);
 
   if (!result.success) {
     return await respond({
       response_type: "ephemeral",
-      replace_original: false,
       text: result.message,
-    });
+    })
   }
+
+  await app.client.chat.update({
+    channel: result.poll.channelId,
+    ts: result.poll.messageTs,
+    text: `Poll: ${result.poll.question}`,
+    blocks: createPollBlocks(result.poll),
+  })
 
   await respond({
     response_type: "ephemeral",

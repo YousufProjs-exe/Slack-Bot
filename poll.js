@@ -26,7 +26,7 @@ function createPollBlocks(poll) {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `*${poll.question}*`,
+        text: `*${poll.question}*\n_Vote for one option:_`,
       },
     },
     {
@@ -35,11 +35,20 @@ function createPollBlocks(poll) {
         type: "button",
         text: {
           type: "plain_text",
-          text: option.name,
+          text: `${option.name} (${option.votes.length})`,
         },
         action_id: "ysh_poll_vote",
         value: `${poll.id}:${option.id}`,
       })),
+    },
+    {
+      type: "context",
+      elements: [
+        {
+          type: "mrkdwn",
+          text: `Total votes: ${poll.options.reduce((total, option) => total + option.votes.length, 0)}`,
+        },
+      ],
     },
   ];
 }
@@ -67,6 +76,15 @@ function castVote(pollId, optionId, userId) {
 
   option.votes.push(userId);
   return { success: true, poll };
+}
+
+function setPollMessage(pollId, channelId, messageTs) {
+  const poll = polls.get(pollId);
+
+  if (!poll) return;
+
+  poll.channelId = channelId;
+  poll.messageTs = messageTs;
 }
 
 module.exports = {
