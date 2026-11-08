@@ -396,7 +396,7 @@ app.command("/ysh-poll-close", async ({ ack, respond, command }) => {
     response_type: "ephemeral",
     text: "Poll closed successfully!",
   });
-})
+});
 
 (async () => {
   await app.start();
