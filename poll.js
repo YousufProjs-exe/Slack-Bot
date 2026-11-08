@@ -24,7 +24,7 @@ function createPollBlocks(poll) {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `*${poll.question}*\n_Vote for one option:_`,
+        text: `*${poll.question}*\n_Vote for one option:_\n_Poll ID: ${poll.id}_`,
       },
     },
     {

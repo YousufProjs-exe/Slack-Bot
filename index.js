@@ -306,7 +306,7 @@ app.command("/ysh-poll", async ({ ack, respond, command }) => {
   const poll = createPoll(command.user_id, question, options);
   const message = await app.client.chat.postMessage({
     channel: command.channel_id,
-    text: `Poll: ${poll.question}`,
+    text: `Poll: ${poll.question} (ID: ${poll.id})`,
     blocks: createPollBlocks(poll),
   });
 
@@ -314,10 +314,8 @@ app.command("/ysh-poll", async ({ ack, respond, command }) => {
 });
 
 app.action(/^ysh_poll_vote_/, async ({ ack, body }) => {
-  await ack();
-
+  await ack()
   const [pollId, optionId] = body.actions[0].value.split(":");
-
   const result = castVote(pollId, optionId, body.user.id);
 
   if (!result.success) {
