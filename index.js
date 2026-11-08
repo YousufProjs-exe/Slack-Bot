@@ -22,7 +22,7 @@
 require("dotenv").config();
 const { App } = require("@slack/bolt")
 const { Parser } = require("expr-eval");
-const { createPoll, polls, createPollBlocks } = require("./poll");
+const { createPoll, polls, createPollBlocks, castVote } = require("./poll");
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -87,7 +87,6 @@ app.command("/ysh-coinflip", async ({ ack, respond }) => {
 app.command("/ysh-dice", async ({ ack, respond, command }) => {
   await ack();
   const result = Math.floor(Math.random() * 6) + 1;
-
   await respond({
     response_type: "in_channel",
     text: `${command.user_name} rolled a ${result}!`,
@@ -253,9 +252,7 @@ app.command("/ysh-remind", async ({ ack, respond, command }) => {
   const amount = Number(match[1]);
   const unit = match[2].toLowerCase();
   const message = match[3]
-
   const multipliers = { s: 1000, m: 60000, h: 3600000};
-
   const delay = amount * multipliers[unit];
 
   if (amount <= 0 || delay > 2147483647) {
@@ -289,9 +286,7 @@ app.command("/ysh-remind", async ({ ack, respond, command }) => {
 
 app.command("/ysh-poll", async ({ ack, respond, command }) => {
   await ack();
-
   const parts = command.text.split("|").map(part => part.trim());
-
   const question = parts.shift();
   const options = parts;
 
@@ -311,7 +306,6 @@ app.command("/ysh-poll", async ({ ack, respond, command }) => {
   }
 
   const poll = createPoll(command.user_id, question, options);
-
   await respond({
     response_type: "in_channel",
     text: `Poll created: *${poll.question}*\n\n${poll.options
@@ -319,6 +313,25 @@ app.command("/ysh-poll", async ({ ack, respond, command }) => {
       .join("\n")}`,
   });
 });
+
+app.action("ysh_poll_vote", async ({ ack, body, respond }) => {
+  await ack();
+  const [pollId, optionId] = body.actions[0].value.split(":");
+  const result = castVote(pollId, optionId, body.user.id);
+
+  if (!result.success) {
+    return await respond({
+      response_type: "ephemeral",
+      replace_original: false,
+      text: result.message,
+    });
+  }
+
+  await respond({
+    response_type: "ephemeral",
+    text: "Your vote has been recorded!",
+  })
+})
 
 (async () => {
   await app.start();
