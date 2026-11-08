@@ -22,7 +22,7 @@
 require("dotenv").config();
 const { App } = require("@slack/bolt")
 const { Parser } = require("expr-eval");
-const { createPoll, polls, createPollBlocks, castVote, setPollMessage } = require("./poll");
+const { createPoll, polls, createPollBlocks, castVote, setPollMessage, closepoll } = require("./poll");
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -339,6 +339,63 @@ app.action("ysh_poll_vote", async ({ ack, body, respond }) => {
     response_type: "ephemeral",
     text: "Your vote has been recorded!",
   })
+})
+
+app.command("/ysh-poll-close", async ({ ack, respond, command }) => {
+  await ack()
+  const pollId = command.text.trim();
+
+  if (!pollId) {
+    return await respond({
+      response_type: "ephemeral",
+      text: "Usage: `/ysh-poll-close POLL_ID`",
+    });
+  }
+
+  const result = closePoll(pollId, command.user_id);
+  if (!result.success) {
+    return await respond({
+      response_type: "ephemeral",
+      text: result.message,
+    });
+  }
+
+  const poll = result.poll;
+  const totalVotes = poll.options.reduce((total, option) => total + option.votes.length, 0)
+
+  const highestVotes = Math.max(
+    ...poll.options.map(option => option.votes.length)
+  );
+
+  const winners = poll.options.filter(option => option.votes.length === highestVotes);
+
+  const winnerText = totalVotes === 0
+    ? "No votes were recorded."
+    : winners.length > 1
+      ? `Tie: ${winners.map(option => option.name).join(", ")}`
+      : `Winner: *${winners[0].name}*`;
+
+  await app.client.chat.update({
+    channel: poll.channelId,
+    ts: poll.messageTs,
+    text: `Closed poll: ${poll.question}`,
+    blocks: [
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: `:lock: *${poll.question}*\n\n${poll.options
+            .map(option => `• ${option.name}: *${option.votes.length}* votes`)
+            .join("\n")}\n\n${winnerText}`,
+        },
+      },
+    ],
+  })
+
+  await respond({
+    response_type: "ephemeral",
+    text: "Poll closed successfully!",
+  });
 })
 
 (async () => {
