@@ -20,7 +20,32 @@ function createPoll(userId, question, options) {
   return poll;
 }
 
+function createPollBlocks(poll) {
+  return [
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `*${poll.question}*`,
+      },
+    },
+    {
+      type: "actions",
+      elements: poll.options.map(option => ({
+        type: "button",
+        text: {
+          type: "plain_text",
+          text: option.name,
+        },
+        action_id: "ysh_poll_vote",
+        value: `${poll.id}:${option.id}`,
+      })),
+    },
+  ];
+}
+
 module.exports = {
   polls,
   createPoll,
+  createPollBlocks,
 };

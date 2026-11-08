@@ -22,7 +22,7 @@
 require("dotenv").config();
 const { App } = require("@slack/bolt")
 const { Parser } = require("expr-eval");
-const { createPoll, polls } = require("./poll");
+const { createPoll, polls, createPollBlocks } = require("./poll");
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -297,11 +297,9 @@ app.command("/ysh-poll", async ({ ack, respond, command }) => {
 
   if (!question || options.length < 2 || options.length > 5) {
     return await respond({
-      response_type: "ephemeral",
-      text:
-        "Usage:\n" +
-        "`/ysh-poll Best programming language? | Java | C | Python`\n\n" +
-        "Provide between 2 and 5 options.",
+      response_type: "in_channel",
+      text: `Poll: ${poll.question}`,
+      blocks: createPollBlocks(poll),
     });
   }
 
