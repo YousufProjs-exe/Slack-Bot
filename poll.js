@@ -37,7 +37,7 @@ function createPollBlocks(poll) {
           type: "plain_text",
           text: `${option.name} (${option.votes.length})`,
         },
-        action_id: "ysh_poll_vote",
+        action_id: `ysh_poll_vote_${option.id}`,
         value: `${poll.id}:${option.id}`,
       })),
     },

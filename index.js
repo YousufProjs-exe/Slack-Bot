@@ -313,7 +313,7 @@ app.command("/ysh-poll", async ({ ack, respond, command }) => {
   setPollMessage(poll.id, message.channel, message.ts);
 });
 
-app.action("ysh_poll_vote", async ({ ack, body, respond }) => {
+app.action(/^ysh_poll_vote_/, async ({ ack, body, respond }) => {
   await ack();
 
   const [pollId, optionId] = body.actions[0].value.split(":");
