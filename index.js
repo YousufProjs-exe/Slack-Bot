@@ -313,7 +313,7 @@ app.command("/ysh-poll", async ({ ack, respond, command }) => {
   setPollMessage(poll.id, message.channel, message.ts);
 });
 
-app.action(/^ysh_poll_vote_/, async ({ ack, body, respond }) => {
+app.action(/^ysh_poll_vote_/, async ({ ack, body }) => {
   await ack();
 
   const [pollId, optionId] = body.actions[0].value.split(":");
@@ -321,10 +321,11 @@ app.action(/^ysh_poll_vote_/, async ({ ack, body, respond }) => {
   const result = castVote(pollId, optionId, body.user.id);
 
   if (!result.success) {
-    return await respond({
-      response_type: "ephemeral",
+    return await app.client.chat.postEphemeral({
+      channel: body.channel.id,
+      user: body.user.id,
       text: result.message,
-    })
+    });
   }
 
   await app.client.chat.update({
@@ -332,13 +333,14 @@ app.action(/^ysh_poll_vote_/, async ({ ack, body, respond }) => {
     ts: result.poll.messageTs,
     text: `Poll: ${result.poll.question}`,
     blocks: createPollBlocks(result.poll),
-  })
+  });
 
-  await respond({
-    response_type: "ephemeral",
+  await app.client.chat.postEphemeral({
+    channel: body.channel.id,
+    user: body.user.id,
     text: "Your vote has been recorded!",
-  })
-})
+  });
+});
 
 app.command("/ysh-poll-close", async ({ ack, respond, command }) => {
   await ack()
@@ -361,13 +363,10 @@ app.command("/ysh-poll-close", async ({ ack, respond, command }) => {
 
   const poll = result.poll;
   const totalVotes = poll.options.reduce((total, option) => total + option.votes.length, 0)
-
   const highestVotes = Math.max(
     ...poll.options.map(option => option.votes.length)
   );
-
   const winners = poll.options.filter(option => option.votes.length === highestVotes);
-
   const winnerText = totalVotes === 0
     ? "No votes were recorded."
     : winners.length > 1

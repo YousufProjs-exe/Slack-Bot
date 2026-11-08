@@ -92,4 +92,5 @@ module.exports = {
   createPoll,
   createPollBlocks,
   castVote,
-}
+  setPollMessage,
+};
