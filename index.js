@@ -396,6 +396,23 @@ app.command("/ysh-poll-close", async ({ ack, respond, command }) => {
   });
 });
 
+app.event("message", async ({ event, client }) => {
+  if (event.subtype || event.bot_id || !event.user) return;
+  if (event.user === "U0BQHKTP8F3") return;
+  if (!event.text?.includes("<@U0BQHKTP8F3>")) return;
+  await client.chat.postMessage({
+    channel: event.channel,
+    thread_ts: event.ts,
+    text: `<@${event.user}> Yousuf is busy. He may reply later.`,
+  });
+
+  const dm = await client.conversations.open({users: "U0BQHKTP8F3",});
+  await client.chat.postMessage({
+    channel: dm.channel.id,
+    text: `You were mentioned in <#${event.channel}>:\n\n${event.text}`,
+  });
+});
+
 (async () => {
   await app.start();
   console.log("yah bro im running");
