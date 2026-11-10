@@ -16,19 +16,93 @@
   reminders 
   better pool 
   my personal messaging bot 
-  DM reminders personal - ephemeral and bot dm 
+  DM reminders personal - ephemeral and bot dm [ used AI to actually debug the not working but error free code ]
 */
 
 require("dotenv").config();
 const { App } = require("@slack/bolt")
 const { Parser } = require("expr-eval");
 const { createPoll, polls, createPollBlocks, castVote, setPollMessage, closepoll } = require("./poll");
-
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   appToken: process.env.SLACK_APP_TOKEN,
   socketMode: true,
 });
+const fs = require("fs");
+const OWNER_ID = "U0BQHKTP8F3";
+const settingsFile = "./auto-reply.json";
+let autoReply = fs.existsSync(settingsFile) ? JSON.parse(fs.readFileSync(settingsFile, "utf8")) : { enabled: true, channel: null, messageTs: null };
+function saveAutoReply() {
+  fs.writeFileSync(settingsFile, JSON.stringify(autoReply, null, 2));
+}
+function autoReplyBlocks() {
+  return [
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `*YSH Helper — Auto-Replies*\nStatus: *${autoReply.enabled ? "ON" : "OFF"}*\n\nAutomatically respond when someone mentions you.`,
+      },
+    },
+    {
+      type: "actions",
+      elements: [
+        {
+          type: "button",
+          action_id: "toggle_auto_reply",
+          text: {
+            type: "plain_text",
+            text: autoReply.enabled ? "Turn OFF" : "Turn ON",
+          },
+          style: autoReply.enabled ? "danger" : "primary",
+          value: "toggle",
+        },
+      ],
+    },
+  ];
+}
+app.action("toggle_auto_reply", async ({ ack, body, client }) => {
+  await ack();
+  if (body.user.id !== OWNER_ID) return;
+  autoReply.enabled = !autoReply.enabled;
+  saveAutoReply();
+  await client.chat.update({
+    channel: body.channel.id,
+    ts: body.message.ts,
+    text: "YSH Helper Auto-Reply Settings",
+    blocks: autoReplyBlocks(),
+  });
+});
+
+async function setupAutoReplyPanel() {
+  const dm = await app.client.conversations.open({
+    users: OWNER_ID,
+  });
+
+  autoReply.channel = dm.channel.id;
+
+  if (autoReply.messageTs) {
+    try {
+      await app.client.chat.update({
+        channel: autoReply.channel,
+        ts: autoReply.messageTs,
+        text: "YSH Helper Auto-Reply Settings",
+        blocks: autoReplyBlocks(),
+      });
+
+      saveAutoReply();
+      return;
+    } catch {}
+  }
+
+  const message = await app.client.chat.postMessage({
+    channel: autoReply.channel,
+    text: "YSH Helper Auto-Reply Settings",
+    blocks: autoReplyBlocks(),
+  });
+  autoReply.messageTs = message.ts;
+  saveAutoReply();
+}
 
 app.command("/ysh-help", async ({ ack, respond }) => {
   await ack();
@@ -216,7 +290,6 @@ app.command("/ysh-calculator", async ({ ack, respond, command }) => {
   try {
     const parser = new Parser();
     const expression = command.text.trim();
-
     if (!expression) {
       return await respond({
         response_type: "ephemeral",
@@ -225,7 +298,6 @@ app.command("/ysh-calculator", async ({ ack, respond, command }) => {
     }
 
     const result = parser.evaluate(expression);
-
     await respond({
       response_type: "ephemeral",
       text: `Result: ${result}`,
@@ -242,7 +314,6 @@ app.command("/ysh-calculator", async ({ ack, respond, command }) => {
 app.command("/ysh-remind", async ({ ack, respond, command }) => {
   await ack();
   const match = command.text.match(/^(\d+)(s|m|h)\s+(.+)$/i);
-
   if (!match) {
     return await respond({
       response_type: "ephemeral",
@@ -362,10 +433,8 @@ app.command("/ysh-poll-close", async ({ ack, respond, command }) => {
   }
 
   const poll = result.poll;
-  const totalVotes = poll.options.reduce((total, option) => total + option.votes.length, 0)
-  const highestVotes = Math.max(
-    ...poll.options.map(option => option.votes.length)
-  );
+  const totalVotes = poll.options.reduce((total, option) => total + option.votes.length, 0);
+  const highestVotes = Math.max(...poll.options.map(option => option.votes.length));
   const winners = poll.options.filter(option => option.votes.length === highestVotes);
   const winnerText = totalVotes === 0
     ? "No votes were recorded."
@@ -397,16 +466,16 @@ app.command("/ysh-poll-close", async ({ ack, respond, command }) => {
 });
 
 app.event("message", async ({ event, client }) => {
+  if (!autoReply.enabled) return;
   if (event.subtype || event.bot_id || !event.user) return;
-  if (event.user === "U0BQHKTP8F3") return;
-  if (!event.text?.includes("<@U0BQHKTP8F3>")) return;
+  if (event.user === OWNER_ID) return;
+  if (!event.text?.includes(`<@${OWNER_ID}>`)) return;
   await client.chat.postMessage({
     channel: event.channel,
     thread_ts: event.ts,
     text: `<@${event.user}> Yousuf is busy. He may reply later.`,
   });
-
-  const dm = await client.conversations.open({users: "U0BQHKTP8F3",});
+  const dm = await client.conversations.open({users: OWNER_ID,});
   await client.chat.postMessage({
     channel: dm.channel.id,
     text: `You were mentioned in <#${event.channel}>:\n\n${event.text}`,
@@ -415,6 +484,7 @@ app.event("message", async ({ event, client }) => {
 
 (async () => {
   await app.start();
+  await setupAutoReplyPanel();
   console.log("yah bro im running");
   // Terminaloic Hope ! 
 })()
