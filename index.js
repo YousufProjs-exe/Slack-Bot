@@ -466,16 +466,30 @@ app.command("/ysh-poll-close", async ({ ack, respond, command }) => {
 });
 
 app.event("message", async ({ event, client }) => {
+  console.log("MESSAGE EVENT:", event.text);
+  console.log("AUTO REPLY:", autoReply.enabled);
+  console.log("USER:", event.user);
+  console.log("OWNER:", OWNER_ID);
+
   if (!autoReply.enabled) return;
   if (event.subtype || event.bot_id || !event.user) return;
   if (event.user === OWNER_ID) return;
-  if (!event.text?.includes(OWNER_ID)) return;
+
+  const mentioned = event.text?.includes(OWNER_ID);
+  console.log("OWNER MENTION:", mentioned);
+
+  if (!mentioned) return;
+
   await client.chat.postMessage({
     channel: event.channel,
     thread_ts: event.ts,
     text: `<@${event.user}> Yousuf is busy. He may reply later.`,
   });
-  const dm = await client.conversations.open({users: OWNER_ID,});
+
+  const dm = await client.conversations.open({
+    users: OWNER_ID,
+  });
+
   await client.chat.postMessage({
     channel: dm.channel.id,
     text: `You were mentioned in <#${event.channel}>:\n\n${event.text}`,
