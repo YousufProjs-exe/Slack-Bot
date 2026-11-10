@@ -22,7 +22,7 @@
 require("dotenv").config();
 const { App } = require("@slack/bolt")
 const { Parser } = require("expr-eval");
-const { createPoll, polls, createPollBlocks, castVote, setPollMessage, closepoll } = require("./poll");
+const { createPoll, polls, createPollBlocks, castVote, setPollMessage, closePoll } = require("./poll");
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   appToken: process.env.SLACK_APP_TOKEN,
