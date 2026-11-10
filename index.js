@@ -492,7 +492,7 @@ app.event("message", async ({ event, client }) => {
 
   await client.chat.postMessage({
     channel: dm.channel.id,
-    text: `You were mentioned in <#${event.channel}>:\n\n${event.text}`,
+    text: `*You were mentioned in <#${event.channel}>*\n*Sent by:* <@${event.user}>\n\n*Message:*\n${event.text}`,
   });
 });
 
