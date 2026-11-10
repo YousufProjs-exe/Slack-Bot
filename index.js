@@ -469,7 +469,7 @@ app.event("message", async ({ event, client }) => {
   if (!autoReply.enabled) return;
   if (event.subtype || event.bot_id || !event.user) return;
   if (event.user === OWNER_ID) return;
-  if (!event.text?.includes(`<@${OWNER_ID}>`)) return;
+  if (!event.text?.includes(OWNER_ID)) return;
   await client.chat.postMessage({
     channel: event.channel,
     thread_ts: event.ts,
