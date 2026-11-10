@@ -126,7 +126,8 @@ app.command("/ysh-help", async ({ ack, respond }) => {
       "`/ysh-calculator` - calculate a mathematical expression\n" +
       "`/ysh-remind` - set a reminder for yourself\n" + 
       "`/ysh-poll` - create a poll with up to 5 options\n" + 
-      "`/ysh-poll-close` - close a poll and show results\n" +
+      "`/ysh-poll-close` - close a poll and show results\n" + 
+      "*must try `@Yousuf [message]` too !!*\n" + 
       "\n*Note:* All commands are case-insensitive and NO COMMAND BLOCK them (they are slash command so type it).",
   })
 })
@@ -139,8 +140,8 @@ app.command("/ysh-password", async ({ ack, respond }) => {
   await respond({
     response_type: "ephemeral",
     text: `Generated password: \`${password}\``,
-  })
-}) // my 10B pin 
+  }) // my 10B pin 
+}) 
 
 // ppl expect pong smtimes 
 app.command("/ysh-ping", async ({ ack, respond }) => {
@@ -501,5 +502,4 @@ app.event("message", async ({ event, client }) => {
   await setupAutoReplyPanel();
   console.log("yah bro im running");
   // Terminaloic Hope ! 
-})()
-// 505 - holy AM ref ! 
+})() // 505 - holy AM ref ! 
