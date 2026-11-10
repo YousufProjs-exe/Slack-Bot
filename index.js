@@ -140,7 +140,7 @@ app.command("/ysh-password", async ({ ack, respond }) => {
     response_type: "ephemeral",
     text: `Generated password: \`${password}\``,
   })
-})
+}) // my 10B pin 
 
 // ppl expect pong smtimes 
 app.command("/ysh-ping", async ({ ack, respond }) => {
@@ -502,3 +502,4 @@ app.event("message", async ({ event, client }) => {
   console.log("yah bro im running");
   // Terminaloic Hope ! 
 })()
+// 505 - holy AM ref ! 
