@@ -19,23 +19,23 @@ A Slack bot with 17 commands and built with Node.js and Slack Bolt. It includes 
 
 ![help ss](screenshots/help.png)
 
-`/ysh-help` - Show available commands 
-`/ysh-coinflip` - Flip a coin to decide 
-`/ysh-dice` - Roll a dice for fun 
-`/ysh-whatsup` - Get what you are upto 
-`/ysh-password` - Generate a password 
-`/ysh-ping` - Check bot response 
-`/ysh-hello` - Say hello 
-`/ysh-time` - Get the current time 
-`/ysh-date` - Get the current date 
-`/ysh-neofetch` - Display system information 
-`/ysh-fastfetch` - Display system information 
-`/ysh-quote` - Get a random quote 
-`/ysh-whoami` - Display your Slack user information 
-`/ysh-calculator` - Evaluate a mathematical expression 
-`/ysh-remind` - Set a personal reminder 
-`/ysh-poll` - Create an interactive poll 
-`/ysh-poll` -close - Close a poll 
+- `/ysh-help` - Show available commands 
+- `/ysh-coinflip` - Flip a coin to decide 
+- `/ysh-dice` - Roll a dice for fun 
+- `/ysh-whatsup` - Get what you are upto 
+- `/ysh-password` - Generate a password 
+- `/ysh-ping` - Check bot response 
+- `/ysh-hello` - Say hello 
+- `/ysh-time` - Get the current time 
+- `/ysh-date` - Get the current date 
+- `/ysh-neofetch` - Display system information 
+- `/ysh-fastfetch` - Display system information 
+- `/ysh-quote` - Get a random quote 
+- `/ysh-whoami` - Display your Slack user information 
+- `/ysh-calculator` - Evaluate a mathematical expression 
+- `/ysh-remind` - Set a personal reminder 
+- `/ysh-poll` - Create an interactive poll 
+- `/ysh-poll` -close - Close a poll 
 
 ## Mention System 
 - quality feature ! -
